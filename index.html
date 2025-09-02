@@ -295,7 +295,7 @@
     <div class="container">
         <div class="header">
             <h1>Pro/Con Lists</h1>
-            <p>Organize your thoughts and make better decisions</p>
+            <p>For my overthinking and indecisive partner &lt;3</p>
         </div>
 
         <div class="controls">
@@ -312,9 +312,11 @@
         let lists = [];
         let nextListId = 1;
 
-        // Initialize with a default list
+        // Initialize with a default list only if no lists exist
         function initializeApp() {
-            addNewList();
+            if (lists.length === 0) {
+                addNewList();
+            }
         }
 
         function addNewList() {
@@ -508,6 +510,7 @@
         // Initialize the app
         loadFromStorage();
         initializeApp();
+        renderLists();
     </script>
 </body>
 </html>
