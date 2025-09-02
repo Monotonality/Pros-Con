@@ -115,8 +115,9 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
         .header {
@@ -190,8 +191,10 @@
 
         .lists-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 25px;
+            width: 100%;
+            max-width: none;
         }
 
         .list-card {
@@ -226,6 +229,23 @@
         .btn-small {
             padding: 8px 16px;
             font-size: 0.9rem;
+        }
+
+        .entry-delete-btn {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            background: rgba(128, 128, 128, 0.3);
+            color: #b0b0b0;
+            border: 1px solid rgba(128, 128, 128, 0.5);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .entry-delete-btn:hover {
+            background: rgba(128, 128, 128, 0.5);
+            color: #e8e8e8;
+            transform: scale(1.05);
         }
 
         .trash-icon {
@@ -404,6 +424,18 @@
 
             .vertical-divider {
                 display: none;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .lists-container {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            }
+        }
+
+        @media (min-width: 1201px) {
+            .lists-container {
+                grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             }
         }
 
@@ -644,7 +676,7 @@
                           list.pros.map(pro => `
                             <div class="entry">
                                 <span class="entry-text">${pro.text}</span>
-                                                                 <button class="btn btn-danger btn-small" onclick="deleteEntry(${list.id}, 'pros', ${pro.id})" title="Delete Entry">✕</button>
+                                                                 <button class="entry-delete-btn" onclick="deleteEntry(${list.id}, 'pros', ${pro.id})" title="Delete Entry">✕</button>
                             </div>
                           `).join('')}
                     </div>
@@ -657,7 +689,7 @@
                           list.cons.map(con => `
                             <div class="entry">
                                 <span class="entry-text">${con.text}</span>
-                                                                 <button class="btn btn-danger btn-small" onclick="deleteEntry(${list.id}, 'cons', ${con.id})" title="Delete Entry">✕</button>
+                                                                 <button class="entry-delete-btn" onclick="deleteEntry(${list.id}, 'cons', ${con.id})" title="Delete Entry">✕</button>
                             </div>
                           `).join('')}
                     </div>
