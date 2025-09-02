@@ -228,6 +228,22 @@
             font-size: 0.9rem;
         }
 
+        .trash-icon {
+            color: white;
+            font-size: 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .trash-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+
         .input-group {
             display: flex;
             gap: 10px;
@@ -273,6 +289,27 @@
 
         .section {
             margin-bottom: 25px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .section::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .section::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .section::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .section::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .section-title {
@@ -370,20 +407,94 @@
             }
         }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
+        /* Print styles */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 20px !important;
+            }
+
+            .animated-bg, .gradient-bg {
+                display: none !important;
+            }
+
+            .controls, .input-group, .btn {
+                display: none !important;
+            }
+
+            .list-actions {
+                display: none !important;
+            }
+
+            .list-card {
+                background: white !important;
+                border: 2px solid #333 !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                margin-bottom: 30px !important;
+                break-inside: avoid;
+            }
+
+            .list-header {
+                border-bottom: 2px solid #333 !important;
+            }
+
+            .list-header input {
+                color: black !important;
+                font-weight: bold !important;
+            }
+
+            .section-title {
+                color: #333 !important;
+                font-weight: bold !important;
+            }
+
+            .section {
+                max-height: none !important;
+                overflow: visible !important;
+                padding-right: 0 !important;
+            }
+
+            .entry {
+                background: #f5f5f5 !important;
+                border: 1px solid #ddd !important;
+                color: black !important;
+            }
+
+            .entry-text {
+                color: black !important;
+            }
+
+            .stats {
+                border-top: 2px solid #333 !important;
+                color: #333 !important;
+            }
+
+            .vertical-divider {
+                background: #333 !important;
+            }
+
+            .container {
+                max-width: none !important;
+            }
+
+            .header h1 {
+                background: none !important;
+                -webkit-text-fill-color: black !important;
+                color: black !important;
+            }
+
+            .header p {
+                color: #666 !important;
+            }
+
+            .empty-message {
+                color: #666 !important;
+            }
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+
     </style>
 </head>
 <body>
@@ -406,6 +517,7 @@
         <div class="controls">
             <button class="btn btn-primary" onclick="addNewList()">Add New List</button>
             <button class="btn btn-secondary" onclick="clearAllLists()">Clear All Lists</button>
+            <button class="btn btn-secondary" onclick="printLists()">🖨️ Print</button>
         </div>
 
         <div id="lists-container" class="lists-container">
@@ -502,7 +614,7 @@
 
         function createListElement(list) {
             const div = document.createElement('div');
-            div.className = 'list-card fade-in';
+                         div.className = 'list-card';
             div.innerHTML = `
                 <div class="list-header">
                     <input type="text" 
@@ -510,62 +622,62 @@
                            value="${list.title}" 
                            onchange="updateListTitle(${list.id}, this.value)"
                            style="background: transparent; border: none; font-size: 1.5rem; font-weight: 700; color: #fff; padding: 0;">
-                    <div class="list-actions">
-                        <button class="btn btn-danger btn-small" onclick="deleteList(${list.id})">Delete</button>
-                    </div>
+                                         <div class="list-actions">
+                         <button class="btn btn-danger btn-small" onclick="deleteList(${list.id})">DELETE</button>
+                     </div>
                 </div>
 
                 <div class="input-group">
                     <input type="text" 
                            id="entry-input-${list.id}" 
                            class="input-field" 
-                           placeholder="Enter your pro or con..."
+                                                       placeholder="Enter your pro or con..."
                            onkeypress="handleKeyPress(event, ${list.id})">
-                    <button class="btn btn-secondary" onclick="addPro(${list.id})">Pro</button>
-                    <button class="btn btn-primary" onclick="addCon(${list.id})">Con</button>
+                                         <button class="btn btn-secondary" onclick="addPro(${list.id})">Pro</button>
+                     <button class="btn btn-primary" onclick="addCon(${list.id})">Con</button>
                 </div>
 
                 <div class="pros-cons-container">
-                    <div class="pros section">
-                        <div class="section-title">Pros (${list.pros.length})</div>
+                                         <div class="pros section">
+                         <div class="section-title">Pros (${list.pros.length})</div>
                         ${list.pros.length === 0 ? '<div class="empty-message">No pros added yet</div>' : 
                           list.pros.map(pro => `
                             <div class="entry">
                                 <span class="entry-text">${pro.text}</span>
-                                <button class="btn btn-danger btn-small" onclick="deleteEntry(${list.id}, 'pros', ${pro.id})">Delete</button>
+                                                                 <button class="btn btn-danger btn-small" onclick="deleteEntry(${list.id}, 'pros', ${pro.id})" title="Delete Entry">✕</button>
                             </div>
                           `).join('')}
                     </div>
 
                     <div class="vertical-divider"></div>
 
-                    <div class="cons section">
-                        <div class="section-title">Cons (${list.cons.length})</div>
+                                         <div class="cons section">
+                         <div class="section-title">Cons (${list.cons.length})</div>
                         ${list.cons.length === 0 ? '<div class="empty-message">No cons added yet</div>' : 
                           list.cons.map(con => `
                             <div class="entry">
                                 <span class="entry-text">${con.text}</span>
-                                <button class="btn btn-danger btn-small" onclick="deleteEntry(${list.id}, 'cons', ${con.id})">Delete</button>
+                                                                 <button class="btn btn-danger btn-small" onclick="deleteEntry(${list.id}, 'cons', ${con.id})" title="Delete Entry">✕</button>
                             </div>
                           `).join('')}
                     </div>
                 </div>
 
                 <div class="stats">
-                    <div class="stat">
-                        <span>Total Pros:</span>
-                        <strong>${list.pros.length}</strong>
-                    </div>
-                    <div class="stat">
-                        <span>Total Cons:</span>
-                        <strong>${list.cons.length}</strong>
-                    </div>
-                    <div class="stat">
-                        <span>Balance:</span>
-                        <strong style="color: ${list.pros.length > list.cons.length ? '#4ecdc4' : list.pros.length < list.cons.length ? '#ff6b6b' : '#b0b0b0'}">
-                            ${list.pros.length > list.cons.length ? '+' : ''}${list.pros.length - list.cons.length}
-                        </strong>
-                    </div>
+                                                              <div class="stat">
+                         <span>Total Pros:</span>
+                         <strong>${list.pros.length}</strong>
+                     </div>
+                     <div class="stat">
+                         <span>Total Cons:</span>
+                         <strong>${list.cons.length}</strong>
+                     </div>
+                     <div class="stat">
+                         <span>Balance:</span>
+                         <strong style="color: ${list.pros.length > list.cons.length ? '#4ecdc4' : list.pros.length < list.cons.length ? '#ff6b6b' : '#b0b0b0'}">
+                             ${list.pros.length > list.cons.length ? '+' : ''}${list.pros.length - list.cons.length}
+                         </strong>
+                     </div>
                 </div>
             `;
             return div;
@@ -596,6 +708,17 @@
                 // Default to adding as a pro when Enter is pressed
                 addPro(listId);
             }
+        }
+
+        function printLists() {
+            // Check if there are lists to print
+            if (lists.length === 0) {
+                alert('No lists to print! Add some pros and cons first.');
+                return;
+            }
+            
+            // Open print dialog
+            window.print();
         }
 
         // Load data from localStorage on page load
